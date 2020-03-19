@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.mapper.rootMapper">
+	<sql id="query_User">
+		<if test="user!=null">
+			<if test="user.username!=null and user.username!=''">
+				and username like '%${user.username}%'
+			</if>
+			<if test="user.nickname!=null and user.nickname!=''">
+				and nickname like '%${user.nickname}%'
+			</if>
+		</if>
+	</sql>
+	<!-- 添加(注册)用户 -->
+	<insert id="addUser" parameterType="cn.itcast.pojo.User">
+		insert into User values(null,#{username},#{password},#{nickname},null)
+	</insert>
+	<!-- 查询用户 -->
+	<select id="queryUser" parameterType="cn.itcast.pojo.UserVo" resultType="cn.itcast.pojo.User">
+		select * from user
+		<where>
+			<include refid="query_User"></include>
+		</where>
+	</select>
+	<!-- 删除用户 -->
+	<delete id="deleteUser" parameterType="int" >
+		delete from User where id = #{id}
+	</delete>
+	<!-- 修改用户信息 -->
+	<select id="editUser" parameterType="int" resultType="cn.itcast.pojo.User">
+		select * from user where id=#{id}
+	</select>
+	<update id="updateUser" parameterType="cn.itcast.pojo.User">
+		update user set username=#{username},password=#{password},nickname=#{nickname} where id=#{id}
+	</update>
+	<!-- 检验密码 -->
+	<select id="queryPassword" parameterType="cn.itcast.pojo.UserVo" resultType="cn.itcast.pojo.User">
+		select * from user where password = #{user.password}
+	</select>
+	<!-- 检验账号 -->
+	<select id="queryUsername" parameterType="cn.itcast.pojo.UserVo" resultType="cn.itcast.pojo.User">
+		select * from user where username = #{user.username}
+	</select>
+</mapper>
